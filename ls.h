@@ -3,7 +3,7 @@
 #include <string.h>
 #include <dirent.h>
 #include <unistd.h>
-
+#include <sys/stat.h>
 // 결과를 저장할 구조체 정의
 typedef struct
 {
@@ -38,7 +38,7 @@ FileList *ls_cmd(const char *path)
 
     int i = 0;
     while ((entry = readdir(dir)) != NULL)
-    {
+    {   
         result->filenames[i++] = strdup(entry->d_name);
     }
 

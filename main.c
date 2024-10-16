@@ -10,4 +10,6 @@ int main(int argc, char* argv[])
         printf("%s\n",list->filenames[i]);
     }   
     return 0;
+
+    
 }

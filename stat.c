@@ -1,8 +1,6 @@
 #include "ls.h"
-
-
 void find(const char * path , const char * file_name) {
-    FileList * file_list = (path);
+    FileList * file_list = ls_cmd(path);
 
     if (file_list->count == 0 || file_list == NULL) {
         free_file_list(file_list);
@@ -12,8 +10,17 @@ void find(const char * path , const char * file_name) {
     //찾는 파일이 있다면 경로 + 파일명 출력 후 리턴
     struct stat file_stat;
     for(int i = 0 ; i < file_list->count ; i ++) {
+        if(!strcmp((const char *)file_list->filenames[i],".") || !strcmp((const char *)file_list->filenames[i],"..")) {
+            continue;
+        }
+        
         if (strcmp((const char *)file_list->filenames[i] , file_name) == 0) {
-            printf("%s%s%s\n", path , "/" , file_list->filenames[i]);
+            if (strcmp (path , "./") == 0) {
+                printf("%s%s\n", path , file_list->filenames[i]);
+            }
+            else {
+                printf("%s%s%s\n", path , "/" , file_list->filenames[i]);
+            }
             return;
         }
         
@@ -30,17 +37,10 @@ void find(const char * path , const char * file_name) {
 
     free_file_list(file_list);
 }
-int main(int argc, char* argv[])
-{   
-    if (argc == 1) {
-        printf("Usage: ./find [path] <file name>\n");
-        return 0;
-    } 
-    const char * path = argc < 3 ? "./" : argv[1];
-    const char * file_name = argc < 3 ?  argv[1] : argv[2];
-    
-    
-    
-    return 0;
+int main(void) {
 
+    find("./", "ls.h");
+    
+
+    return 0;
 }
