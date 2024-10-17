@@ -6,6 +6,7 @@ FileList *ls_cmd(const char *path)
     struct dirent *entry;
     FileList *result = (FileList *)malloc(sizeof(FileList));
     result->count = 0;
+    result->capacity = 0;
     result->filenames = NULL;
 
     if ((dir = opendir(path)) == NULL) // error 실행파일 일 경우 if문 걸림
@@ -16,19 +17,12 @@ FileList *ls_cmd(const char *path)
     }
 
     while ((entry = readdir(dir)) != NULL)
-    {
-        result->count++;
-    }
-
-    result->filenames = (char **)malloc(sizeof(char *) * result->count);
-
-    // 디렉토리 스트림 재설정 -> 위의 while문에서 디렉토리 스트림은 끝까지 가있기때문. rewinddir 하지 않으면 아무 파일도 읽지 못함.
-    rewinddir(dir);
-
-    int i = 0;
-    while ((entry = readdir(dir)) != NULL)
-    {
-        result->filenames[i++] = strdup(entry->d_name);
+    {   
+        if(result->capacity >= result->count) {
+            result->capacity = result->capacity == 0 ? 10 : result->capacity * 2;
+            result->filenames = realloc(result->filenames , result->capacity * sizeof(char*));
+        }
+        result->filenames[result->count++] = strdup(entry->d_name);
     }
 
     if (closedir(dir) == -1)
@@ -48,97 +42,56 @@ void free_file_list(FileList *list)
     free(list);
 }
 
-void print_path(const char *path, const char *file_name)
+void concat_path(const char *path, const char *file_name, char * buf)
 {
-    if (!strcmp(path, "./"))
-    {
-        printf("%s%s\n", path, file_name);
-    }
-    else
-    {
-        if (path[strlen(path) - 1] == '/')
-        {
-            printf("%s%s\n", path, file_name);
-        }
-        else
-        {
-            printf("%s%s%s\n", path, "/", file_name);
-        }
-    }
-}
-
-char *concat_path(const char *path, const char *file_name)
-{
-
     int need_slash = path[strlen(path) - 1] != '/';
-    size_t total_size = strlen(path) + strlen(file_name) + 1 + need_slash; // +1은 '\0'
-    assert(total_size >= strlen(path) + strlen(file_name) + 1);
-
-    char *buf = (char *)malloc(total_size);
-    if (buf == NULL)
-    {
-        return NULL;
-    }
+    memset(buf , 0 , PATH_MAX);
     strcpy(buf, path);
     if (need_slash)
     {
         strcat(buf, "/");
     }
     strcat(buf, file_name);
-    return buf; // free 필수
 }
 
-void find(const char *path, const char *file_name)
+void find(const char *path, const char *file_name, PathList *path_list)
 {
-    FileList *file_list = ls_cmd(path);
-    if (file_list == NULL)
-    {
-        return;
-    }
-    if (file_list->count == 0)
-    {
-        free_file_list(file_list);
-        return;
-    }
+    FileList * file_list = ls_cmd(path);
+    assert(file_list != NULL);
 
-    // 찾는 파일이 있다면 경로 + 파일명 출력 후 리턴
     struct stat file_stat;
-    for (int i = 0; i < file_list->count; i++)
-    {
-        const char *file = (const char *)file_list->filenames[i];
-        if (!strcmp(file, ".") || !strcmp(file, ".."))
-        {
+    char current_file_path[PATH_MAX];
+    for(int i = 0 ; i < file_list->count ; i ++) {
+        const char *current_file_name = (const char*)file_list->filenames[i];
+        if (!strcmp(current_file_name , ".") || !strcmp(current_file_name , "..")) {
             continue;
         }
 
-        char *file_buf = concat_path(path, file);
-
-        if (lstat(file_buf, &file_stat) == 0)
-        {
-            if (S_ISDIR(file_stat.st_mode))
-            {
-                assert(file_buf != NULL);
-                find(file_buf, file_name);
+        concat_path(path, file_name, current_file_path);
+        if (lstat(current_file_path, &file_stat) == 0) {
+            if (S_ISDIR(file_stat.st_mode)) {
+                find(current_file_path, file_name , path_list);
+            } else if(!strcmp(current_file_name , file_name)) {
+                add_path_list(path_list , current_file_path);
             }
-            else if (S_ISLNK(file_stat.st_mode))
-            {
-                // defer
-            }
+        } else {
+            printf("%s - stat failed: %s\n", current_file_path, strerror(errno));
         }
-        else
-        {
-            printf("%s - stat failed: %s\n", file_buf, strerror(errno));
-        }
-
-
-        if (!strcmp(file, file_name))
-        {
-            print_path(path, file_name);
-            free_file_list(file_list);
-            return;
-        }
-        free(file_buf);
     }
-
     free_file_list(file_list);
+}
+
+void add_path_list(PathList *path_list , char * file_path) {
+    if (path_list->capacity <= path_list->count) {
+        path_list->capacity = path_list->capacity == 0 ? 10 : path_list->capacity * 2;
+        path_list->pathlists = realloc(path_list->pathlists , path_list->capacity * sizeof(char*));
+    }
+    path_list->pathlists[path_list->count++] = strdup(file_path);
+}
+
+void free_path_list(PathList *path_list) {
+    for (int i = 0 ; i < path_list->count ; i ++) {
+        free(path_list->pathlists[i]);
+    }
+    free(path_list->pathlists);
 }

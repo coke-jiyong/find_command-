@@ -2,18 +2,21 @@
 #include <stdlib.h>
 #include <string.h>
 #include <dirent.h>
-#include <unistd.h>
 #include <sys/stat.h>
 #include <errno.h>
 #include <assert.h>
-
-// 결과를 저장할 구조체 정의
 
 typedef struct
 {
     char **filenames; // 파일명 배열
     int count;        // 파일 개수
 } FileList;
+
+typedef struct {
+    char **paths;
+    int count;
+    int capacity;
+} ResultList;
 
 FileList *ls_cmd(const char *path)
 {
@@ -52,36 +55,6 @@ FileList *ls_cmd(const char *path)
     }
     return result;
 }
-
-void free_file_list(FileList *list)
-{
-    for (int i = 0; i < list->count; i++)
-    {
-        free(list->filenames[i]);
-    }
-    free(list->filenames);
-    free(list);
-}
-
-void print_path(const char *path, const char *file_name)
-{
-    if (!strcmp(path, "./"))
-    {
-        printf("%s%s\n", path, file_name);
-    }
-    else
-    {
-        if (path[strlen(path) - 1] == '/')
-        {
-            printf("%s%s\n", path, file_name);
-        }
-        else
-        {
-            printf("%s%s%s\n", path, "/", file_name);
-        }
-    }
-}
-
 char *concat_path(const char *path, const char *file_name)
 {
 
@@ -103,53 +76,94 @@ char *concat_path(const char *path, const char *file_name)
     return buf; // free 필수
 }
 
-void find(const char *path, const char *file_name)
+void free_file_list(FileList *list)
 {
-    FileList *file_list = ls_cmd(path);
-    if (file_list == NULL)
+    for (int i = 0; i < list->count; i++)
     {
+        free(list->filenames[i]);
+    }
+    free(list->filenames);
+    free(list);
+}
+
+void init_result_list(ResultList *list) {
+    list->paths = NULL;
+    list->count = 0;
+    list->capacity = 0;
+}
+
+void add_result(ResultList *list, const char *path) {
+    if (list->count >= list->capacity) {
+        list->capacity = list->capacity == 0 ? 16 : list->capacity * 2;
+        list->paths = realloc(list->paths, list->capacity * sizeof(char *));
+    }
+    list->paths[list->count++] = strdup(path);
+}
+
+void free_result_list(ResultList *list) {
+    for (int i = 0; i < list->count; i++) {
+        free(list->paths[i]);
+    }
+    free(list->paths);
+}
+
+void find(const char *path, const char *file_name, ResultList *results) {
+    FileList *file_list = ls_cmd(path);
+    if (file_list == NULL) {
         return;
     }
-    if (file_list->count == 0)
-    {
+    if (file_list->count == 0) {
         free_file_list(file_list);
         return;
     }
 
-    // 찾는 파일이 있다면 경로 + 파일명 출력 후 리턴
     struct stat file_stat;
-    for (int i = 0; i < file_list->count; i++)
-    {
+    for (int i = 0; i < file_list->count; i++) {
         const char *file = (const char *)file_list->filenames[i];
-        if (!strcmp(file, ".") || !strcmp(file, ".."))
-        {
+        if (!strcmp(file, ".") || !strcmp(file, "..")) {
             continue;
-        }
-
-        if (!strcmp(file, file_name))
-        {
-            print_path(path, file_name);
-            free_file_list(file_list);
-            return;
         }
 
         char *file_buf = concat_path(path, file);
 
-        if (stat(file_buf, &file_stat) == 0)
-        {
-            if (S_ISDIR(file_stat.st_mode))
-            {
-                assert(file_buf != NULL);
-                find(file_buf, file_name);
+        if (lstat(file_buf, &file_stat) == 0) {
+            if (S_ISDIR(file_stat.st_mode)) {
+                find(file_buf, file_name, results);
+            } else if (!strcmp(file, file_name)) {
+                add_result(results, file_buf);
             }
-        }
-        else
-        {
+        } else {
             printf("%s - stat failed: %s\n", file_buf, strerror(errno));
         }
 
         free(file_buf);
     }
-
+    
     free_file_list(file_list);
+}
+
+int main(int argc, char* argv[]) {
+    if (argc == 1) {
+        printf("Usage: ./find [path] <file name>\n");
+        return 0;
+    } 
+    const char * path = argc < 3 ? "./" : argv[1];
+    const char * file_name = argc < 3 ?  argv[1] : argv[2];
+    
+    ResultList results;
+    init_result_list(&results);
+    
+    find(path, file_name, &results);
+    
+    if (results.count == 0) {
+        printf("No files found.\n");
+    } else {
+        printf("Found %d file(s):\n", results.count);
+        for (int i = 0; i < results.count; i++) {
+            printf("%s\n", results.paths[i]);
+        }
+    }
+    
+    free_result_list(&results);
+    return 0;
 }
