@@ -1,19 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <dirent.h>
-#include <unistd.h>
-#include <sys/stat.h>
-#include <errno.h>
-#include <assert.h>
-
-// 결과를 저장할 구조체 정의
-
-typedef struct
-{
-    char **filenames; // 파일명 배열
-    int count;        // 파일 개수
-} FileList;
+#include "find.h"
 
 FileList *ls_cmd(const char *path)
 {
@@ -126,21 +111,18 @@ void find(const char *path, const char *file_name)
             continue;
         }
 
-        if (!strcmp(file, file_name))
-        {
-            print_path(path, file_name);
-            free_file_list(file_list);
-            return;
-        }
-
         char *file_buf = concat_path(path, file);
 
-        if (stat(file_buf, &file_stat) == 0)
+        if (lstat(file_buf, &file_stat) == 0)
         {
             if (S_ISDIR(file_stat.st_mode))
             {
                 assert(file_buf != NULL);
                 find(file_buf, file_name);
+            }
+            else if (S_ISLNK(file_stat.st_mode))
+            {
+                // defer
             }
         }
         else
@@ -148,6 +130,13 @@ void find(const char *path, const char *file_name)
             printf("%s - stat failed: %s\n", file_buf, strerror(errno));
         }
 
+
+        if (!strcmp(file, file_name))
+        {
+            print_path(path, file_name);
+            free_file_list(file_list);
+            return;
+        }
         free(file_buf);
     }
 

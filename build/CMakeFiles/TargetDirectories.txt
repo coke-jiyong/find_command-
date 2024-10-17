@@ -1,0 +1,3 @@
+/home/ubuntu/mytmp/find/build/CMakeFiles/File_Explorer.dir
+/home/ubuntu/mytmp/find/build/CMakeFiles/edit_cache.dir
+/home/ubuntu/mytmp/find/build/CMakeFiles/rebuild_cache.dir
