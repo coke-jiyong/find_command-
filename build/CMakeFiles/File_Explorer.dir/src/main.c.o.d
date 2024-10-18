@@ -1,6 +1,7 @@
 CMakeFiles/File_Explorer.dir/src/main.c.o: \
- /home/ubuntu/mytmp/find/src/main.c /usr/include/stdc-predef.h \
- /home/ubuntu/mytmp/find/src/find.h /usr/include/stdio.h \
+ /home/ubuntu/mytmp/find/find_command-/src/main.c \
+ /usr/include/stdc-predef.h \
+ /home/ubuntu/mytmp/find/find_command-/src/find.h /usr/include/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \

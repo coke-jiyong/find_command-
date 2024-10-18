@@ -1,6 +1,16 @@
 #include "find.h"
 
+void print_path(PathList *list) {
+    if (list->count == 0) {
+        printf("This file not found.\n");
+        return;
+    }
 
+    printf("%d file found.\n", list->count);
+    for(int i = 0 ; i < list->count ; i ++) {
+        printf("%s\n", list->pathlists[i]);
+    }
+}
 int main(int argc, char* argv[])
 {
     if (argc == 1) {
@@ -10,8 +20,17 @@ int main(int argc, char* argv[])
     const char * path = argc < 3 ? "./" : argv[1];
     const char * file_name = argc < 3 ?  argv[1] : argv[2];
 
-    find(path , file_name);
-    printf("%d file found.\n", found_count);
+    PathList path_list = {
+        .capacity=0,
+        .count=0,
+        .pathlists=NULL
+    };
 
+    find(path , file_name , &path_list);
+
+    //printf("count:%d capacity:%d\n", path_list.count , path_list.capacity);
+    print_path(&path_list);
+
+    free_path_list(&path_list);
     return 0;
 }
