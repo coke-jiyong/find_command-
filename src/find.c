@@ -1,46 +1,72 @@
 #include "find.h"
 
+int found_count = 0;
+
 FileList *ls_cmd(const char *path)
 {
     DIR *dir;
     struct dirent *entry;
-    FileList *result = (FileList *)malloc(sizeof(FileList));
-    result->count = 0;
-    result->capacity = 0;
-    result->filenames = NULL;
-
+    FileList* dir_head = NULL;
+    
     if ((dir = opendir(path)) == NULL) // error 실행파일 일 경우 if문 걸림
     {
-        // printf("%s: %s\n",path,strerror(errno));
-        free(result);
         return NULL;
     }
 
     while ((entry = readdir(dir)) != NULL)
     {   
-        if(result->capacity <= result->count) {
-            result->capacity = result->capacity == 0 ? 10 : result->capacity * 2;
-            result->filenames = realloc(result->filenames , result->capacity * sizeof(char*));
-        }
-        result->filenames[result->count++] = strdup(entry->d_name);
-        
+        assert(strlen(entry->d_name) < FILE_NAME_MAX); //리눅스 파일명 최대길이 255
+        append_file_name(&dir_head, entry->d_name);
     }
 
     if (closedir(dir) == -1)
     {
         printf("close directory failed.\n");
     }
-    return result;
+
+    return dir_head;
 }
 
-void free_file_list(FileList *list)
-{
-    for (int i = 0; i < list->count; i++)
-    {
-        free(list->filenames[i]);
+FileList *make_new_node() {
+    FileList *new = (FileList*)malloc(sizeof(FileList));
+    memset(new->filename , 0 , FILE_NAME_MAX);
+    new->next = NULL;
+
+    return new;
+}
+
+
+void append_file_name(FileList **dir_head, char *file_name) {
+    FileList *new = make_new_node();
+    strncpy(new->filename , file_name, strlen(file_name)+1);
+    new->filename[strlen(file_name)] = '\0';
+
+    if (*dir_head == NULL) {
+        *dir_head = new;
+    } else {
+        FileList *current = *dir_head;
+        while (current->next != NULL) {
+            current = current->next;
+        }
+        current->next = new;
     }
-    free(list->filenames);
-    free(list);
+}
+
+void free_file_list(FileList *dir_head)
+{   
+    while(dir_head != NULL) {
+        FileList * tmp_head = dir_head->next;
+        free(dir_head);
+        dir_head = tmp_head;
+    }
+}
+
+void print_list(FileList *list){ //for test
+    FileList * tmp = list;
+    while(tmp!=NULL) {
+        printf("%s\n", tmp->filename);
+        tmp = tmp->next;
+    }
 }
 
 void concat_path(const char *path, const char *file_name, char * buf)
@@ -55,44 +81,35 @@ void concat_path(const char *path, const char *file_name, char * buf)
     strcat(buf, file_name);
 }
 
-void find(const char *path, const char *file_name, PathList *path_list)
-{
-    FileList * file_list = ls_cmd(path);
-    assert(file_list != NULL);
+void find(const char *path, const char *file_name)
+{   
 
+    FileList * file_head = ls_cmd(path);
+    if(file_head == NULL) {
+        return;
+    }
+    
     struct stat file_stat;
     char current_file_path[PATH_MAX];
-    for(int i = 0 ; i < file_list->count ; i ++) {
-        const char *current_file_name = (const char*)file_list->filenames[i];
-        if (!strcmp(current_file_name , ".") || !strcmp(current_file_name , "..")) {
-            continue;
-        }
-
-        concat_path(path, current_file_name, current_file_path);
-        if (lstat(current_file_path, &file_stat) == 0) {
-            if (S_ISDIR(file_stat.st_mode)) {
-                find(current_file_path, file_name , path_list);
-            } else if(!strcmp(current_file_name , file_name)) {
-                add_path_list(path_list , current_file_path);
+    FileList *tmp_list = file_head;
+    while(tmp_list!=NULL) {
+        const char *current_file_name = (const char*)tmp_list->filename;
+        if (strcmp(current_file_name , ".") && strcmp(current_file_name , "..")) {
+            concat_path(path, current_file_name, current_file_path);
+            //printf("%s\n", current_file_path);
+            if (lstat(current_file_path, &file_stat) == 0) {
+                if (S_ISDIR(file_stat.st_mode)) {
+                    find(current_file_path, file_name);
+                } else if(!strcmp(current_file_name , file_name)) {
+                    printf("%s\n",current_file_path);
+                    found_count ++;
+                }
+            } else {
+                //printf("%s - stat failed: %s\n", current_file_path, strerror(errno));
+                //보류
             }
-        } else {
-            printf("%s - stat failed: %s\n", current_file_path, strerror(errno));
         }
+        tmp_list = tmp_list->next;
     }
-    free_file_list(file_list);
-}
-
-void add_path_list(PathList *path_list , char * file_path) {
-    if (path_list->capacity <= path_list->count) {
-        path_list->capacity = path_list->capacity == 0 ? 10 : path_list->capacity * 2;
-        path_list->pathlists = realloc(path_list->pathlists , path_list->capacity * sizeof(char*));
-    }
-    path_list->pathlists[path_list->count++] = strdup(file_path);
-}
-
-void free_path_list(PathList *path_list) {
-    for (int i = 0 ; i < path_list->count ; i ++) {
-        free(path_list->pathlists[i]);
-    }
-    free(path_list->pathlists);
+    free_file_list(file_head);
 }

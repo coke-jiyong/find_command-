@@ -8,6 +8,8 @@
         "string_view": "c",
         "streambuf": "c",
         "dirent.h": "c",
-        "find.h": "c"
+        "find.h": "c",
+        "algorithm": "c",
+        "errno.h": "c"
     }
 }
