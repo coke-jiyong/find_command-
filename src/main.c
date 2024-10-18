@@ -28,6 +28,7 @@ int main(int argc, char* argv[])
 
     find(path , file_name , &path_list);
 
+    //printf("count:%d capacity:%d\n", path_list.count , path_list.capacity);
     print_path(&path_list);
 
     free_path_list(&path_list);
