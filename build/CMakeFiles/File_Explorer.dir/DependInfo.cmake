@@ -8,8 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/ubuntu/mytmp/find/src/find.c" "CMakeFiles/File_Explorer.dir/src/find.c.o" "gcc" "CMakeFiles/File_Explorer.dir/src/find.c.o.d"
-  "/home/ubuntu/mytmp/find/src/main.c" "CMakeFiles/File_Explorer.dir/src/main.c.o" "gcc" "CMakeFiles/File_Explorer.dir/src/main.c.o.d"
+  "/home/ubuntu/mytmp/find/find_command-/src/find.c" "CMakeFiles/File_Explorer.dir/src/find.c.o" "gcc" "CMakeFiles/File_Explorer.dir/src/find.c.o.d"
+  "/home/ubuntu/mytmp/find/find_command-/src/main.c" "CMakeFiles/File_Explorer.dir/src/main.c.o" "gcc" "CMakeFiles/File_Explorer.dir/src/main.c.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

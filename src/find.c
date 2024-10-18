@@ -18,7 +18,7 @@ FileList *ls_cmd(const char *path)
 
     while ((entry = readdir(dir)) != NULL)
     {   
-        if(result->capacity >= result->count) {
+        if(result->capacity <= result->count) {
             result->capacity = result->capacity == 0 ? 10 : result->capacity * 2;
             result->filenames = realloc(result->filenames , result->capacity * sizeof(char*));
         }
@@ -67,7 +67,7 @@ void find(const char *path, const char *file_name, PathList *path_list)
             continue;
         }
 
-        concat_path(path, file_name, current_file_path);
+        concat_path(path, current_file_name, current_file_path);
         if (lstat(current_file_path, &file_stat) == 0) {
             if (S_ISDIR(file_stat.st_mode)) {
                 find(current_file_path, file_name , path_list);

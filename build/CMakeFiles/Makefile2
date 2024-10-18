@@ -54,10 +54,10 @@ RM = /usr/local/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ubuntu/mytmp/find
+CMAKE_SOURCE_DIR = /home/ubuntu/mytmp/find/find_command-
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ubuntu/mytmp/find/build
+CMAKE_BINARY_DIR = /home/ubuntu/mytmp/find/find_command-/build
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -81,14 +81,14 @@ clean: CMakeFiles/File_Explorer.dir/clean
 CMakeFiles/File_Explorer.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/File_Explorer.dir/build.make CMakeFiles/File_Explorer.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/File_Explorer.dir/build.make CMakeFiles/File_Explorer.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/ubuntu/mytmp/find/build/CMakeFiles --progress-num=1,2,3 "Built target File_Explorer"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/ubuntu/mytmp/find/find_command-/build/CMakeFiles --progress-num=1,2,3 "Built target File_Explorer"
 .PHONY : CMakeFiles/File_Explorer.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/File_Explorer.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/mytmp/find/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/mytmp/find/find_command-/build/CMakeFiles 3
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/File_Explorer.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/mytmp/find/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/mytmp/find/find_command-/build/CMakeFiles 0
 .PHONY : CMakeFiles/File_Explorer.dir/rule
 
 # Convenience name for target.
