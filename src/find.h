@@ -6,25 +6,24 @@
 #include <sys/stat.h>
 #include <errno.h>
 #include <assert.h>
+#define PATH_MAX 4096
+#define FILE_NAME_MAX 256
 
-typedef struct
+
+typedef struct node
 {
-    char **filenames;
-    int count;
-    int capacity;
+    char filename[FILE_NAME_MAX];
+    struct node * next; 
 } FileList;
 
-typedef struct {
-    char ** pathlists;
-    int count;
-    int capacity;
-} PathList;
 
-#define PATH_MAX 4096
+extern int found_count;
 
 FileList *ls_cmd(const char *path);
-void free_file_list(FileList *list);
+FileList *make_new_node();
+void append_file_name(FileList **dir_head, char *file_name);
 void concat_path(const char *path, const char *file_name, char *buf);
-void find(const char *path, const char *file_name, PathList *path_list);
-void add_path_list(PathList *path_list , char * file_path);
-void free_path_list(PathList *path_list);
+void find(const char *path, const char *file_name);
+void free_file_list(FileList *head);
+
+void print_list(FileList *list); //for test
