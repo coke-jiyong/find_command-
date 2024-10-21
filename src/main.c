@@ -1,36 +1,29 @@
 #include "find.h"
+#include <pthread.h>
+#include <stdbool.h>
 
-void print_path(PathList *list) {
-    if (list->count == 0) {
-        printf("This file not found.\n");
-        return;
-    }
+char file_name[NAME_MAX];
+threadpool thpool;
 
-    printf("%d file found.\n", list->count);
-    for(int i = 0 ; i < list->count ; i ++) {
-        printf("%s\n", list->pathlists[i]);
-    }
-}
 int main(int argc, char* argv[])
 {
     if (argc == 1) {
         printf("Usage: ./find [path] <file name>\n");
         return 0;
-    } 
+    }
+    thpool = thpool_init(8);
     const char * path = argc < 3 ? "./" : argv[1];
-    const char * file_name = argc < 3 ?  argv[1] : argv[2];
+    strcpy(file_name , argc < 3 ?  argv[1] : argv[2]);
+    
+    printf("path: %s , file_name: %s\n", path , file_name);
+    printf("Searching for %s ...\n", file_name);
+    fflush(stdout);
 
-    PathList path_list = {
-        .capacity=0,
-        .count=0,
-        .pathlists=NULL
-    };
+    thpool_add_work(thpool , find , (void*)path);
+    
+    thpool_wait(thpool);
+    
+    thpool_destroy(thpool);
 
-    find(path , file_name , &path_list);
-
-    //printf("count:%d capacity:%d\n", path_list.count , path_list.capacity);
-    print_path(&path_list);
-
-    free_path_list(&path_list);
     return 0;
 }

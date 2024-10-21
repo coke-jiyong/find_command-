@@ -55,7 +55,7 @@ void concat_path(const char *path, const char *file_name, char * buf)
     strcat(buf, file_name);
 }
 
-void find(const char *path, const char *file_name, PathList *path_list)
+void find(void *path)
 {
     FileList * file_list = ls_cmd(path);
     //assert(file_list != NULL); //assert 시 없는 경로를 검색하면 core dumped.
@@ -75,11 +75,12 @@ void find(const char *path, const char *file_name, PathList *path_list)
         if (lstat(current_file_path, &file_stat) == 0) {
             if (S_ISDIR(file_stat.st_mode)) {
                 if (!strcmp(current_file_name , file_name)) {
-                    add_path_list(path_list , current_file_path);    
+                    printf("%s\n", current_file_path);
                 }
-                find(current_file_path, file_name , path_list);
+                thpool_add_work(thpool , find , (void*)current_file_path);
+                
             } else if(!strcmp(current_file_name , file_name)) {
-                add_path_list(path_list , current_file_path);
+                printf("%s\n", current_file_path);
             }
         } //else {
         //     printf("%s - stat failed: %s\n", current_file_path, strerror(errno)); //for debug
