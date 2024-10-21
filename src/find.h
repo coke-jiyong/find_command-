@@ -15,7 +15,7 @@ typedef struct
 } FileList;
 
 typedef struct {
-    char ** pathlists;
+    char **pathlists;
     int count;
     int capacity;
 } PathList;

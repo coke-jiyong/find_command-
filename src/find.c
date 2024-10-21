@@ -58,8 +58,11 @@ void concat_path(const char *path, const char *file_name, char * buf)
 void find(const char *path, const char *file_name, PathList *path_list)
 {
     FileList * file_list = ls_cmd(path);
-    assert(file_list != NULL);
+    //assert(file_list != NULL); //assert 시 없는 경로를 검색하면 core dumped.
 
+    if(file_list == NULL) {
+        return ;
+    }
     struct stat file_stat;
     char current_file_path[PATH_MAX];
     for(int i = 0 ; i < file_list->count ; i ++) {
@@ -71,13 +74,16 @@ void find(const char *path, const char *file_name, PathList *path_list)
         concat_path(path, current_file_name, current_file_path);
         if (lstat(current_file_path, &file_stat) == 0) {
             if (S_ISDIR(file_stat.st_mode)) {
+                if (!strcmp(current_file_name , file_name)) {
+                    add_path_list(path_list , current_file_path);    
+                }
                 find(current_file_path, file_name , path_list);
             } else if(!strcmp(current_file_name , file_name)) {
                 add_path_list(path_list , current_file_path);
             }
-        } else {
-            printf("%s - stat failed: %s\n", current_file_path, strerror(errno));
-        }
+        } //else {
+        //     printf("%s - stat failed: %s\n", current_file_path, strerror(errno)); //for debug
+        // }
     }
     free_file_list(file_list);
 }

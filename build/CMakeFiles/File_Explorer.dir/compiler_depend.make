@@ -83,8 +83,7 @@ CMakeFiles/File_Explorer.dir/src/find.c.o: /home/ubuntu/mytmp/find/find_command-
   /usr/lib/gcc/x86_64-linux-gnu/11/include/stddef.h
 
 CMakeFiles/File_Explorer.dir/src/main.c.o: /home/ubuntu/mytmp/find/find_command-/src/main.c \
-  /home/ubuntu/mytmp/find/src/find.h \
-  /home/ubuntu/mytmp/find/src/main.c \
+  /home/ubuntu/mytmp/find/find_command-/src/find.h \
   /usr/include/alloca.h \
   /usr/include/asm-generic/errno-base.h \
   /usr/include/asm-generic/errno.h \
@@ -165,8 +164,6 @@ CMakeFiles/File_Explorer.dir/src/main.c.o: /home/ubuntu/mytmp/find/find_command-
   /usr/lib/gcc/x86_64-linux-gnu/11/include/stddef.h
 
 
-/home/ubuntu/mytmp/find/src/find.h:
-
 /usr/lib/gcc/x86_64-linux-gnu/11/include/stdarg.h:
 
 /usr/include/x86_64-linux-gnu/sys/types.h:
@@ -202,8 +199,6 @@ CMakeFiles/File_Explorer.dir/src/main.c.o: /home/ubuntu/mytmp/find/find_command-
 /usr/include/x86_64-linux-gnu/bits/types/timer_t.h:
 
 /usr/include/endian.h:
-
-/home/ubuntu/mytmp/find/src/main.c:
 
 /usr/include/x86_64-linux-gnu/bits/errno.h:
 
