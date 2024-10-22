@@ -9,8 +9,9 @@
 #include <sys/stat.h>
 #include <errno.h>
 #include <assert.h>
+#include <pthread.h>
 #include "thpool.h"
-
+//#define DEBUG
 #define PATH_MAX 4096
 #define NAME_MAX 255
 typedef struct
@@ -27,7 +28,6 @@ typedef struct {
 } PathList;
 
 extern char file_name[NAME_MAX];
-extern threadpool thpool;
 
 FileList *ls_cmd(const char *path);
 void free_file_list(FileList *list);

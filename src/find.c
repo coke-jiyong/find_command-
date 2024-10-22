@@ -77,8 +77,7 @@ void find(void *path)
                 if (!strcmp(current_file_name , file_name)) {
                     printf("%s\n", current_file_path);
                 }
-                thpool_add_work(thpool , find , (void*)current_file_path);
-                
+                find((void*)current_file_path);
             } else if(!strcmp(current_file_name , file_name)) {
                 printf("%s\n", current_file_path);
             }

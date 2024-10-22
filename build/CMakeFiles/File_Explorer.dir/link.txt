@@ -1,1 +1,1 @@
-/usr/bin/cc  -g -rdynamic CMakeFiles/File_Explorer.dir/src/find.c.o CMakeFiles/File_Explorer.dir/src/main.c.o -o File_Explorer
+/usr/bin/cc  -g -rdynamic CMakeFiles/File_Explorer.dir/src/find.o CMakeFiles/File_Explorer.dir/src/main.o -o File_Explorer

@@ -1,0 +1,1 @@
+/usr/bin/cc  -g -rdynamic CMakeFiles/fsearch.dir/src/find.o CMakeFiles/fsearch.dir/src/main.o CMakeFiles/fsearch.dir/src/thpool.o -o fsearch  -lpthread

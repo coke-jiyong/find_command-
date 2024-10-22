@@ -1,3 +1,7 @@
-/home/ubuntu/mytmp/find/find_command-/build/CMakeFiles/File_Explorer.dir
-/home/ubuntu/mytmp/find/find_command-/build/CMakeFiles/edit_cache.dir
-/home/ubuntu/mytmp/find/find_command-/build/CMakeFiles/rebuild_cache.dir
+/home/ubuntu/mytmp/find-command/build/CMakeFiles/fsearch.dir
+/home/ubuntu/mytmp/find-command/build/CMakeFiles/edit_cache.dir
+/home/ubuntu/mytmp/find-command/build/CMakeFiles/rebuild_cache.dir
+/home/ubuntu/mytmp/find-command/build/CMakeFiles/list_install_components.dir
+/home/ubuntu/mytmp/find-command/build/CMakeFiles/install.dir
+/home/ubuntu/mytmp/find-command/build/CMakeFiles/install/local.dir
+/home/ubuntu/mytmp/find-command/build/CMakeFiles/install/strip.dir

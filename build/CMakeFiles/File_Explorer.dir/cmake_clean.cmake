@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/File_Explorer.dir/src/find.c.o"
-  "CMakeFiles/File_Explorer.dir/src/find.c.o.d"
-  "CMakeFiles/File_Explorer.dir/src/main.c.o"
-  "CMakeFiles/File_Explorer.dir/src/main.c.o.d"
+  "CMakeFiles/File_Explorer.dir/src/find.o"
+  "CMakeFiles/File_Explorer.dir/src/find.o.d"
+  "CMakeFiles/File_Explorer.dir/src/main.o"
+  "CMakeFiles/File_Explorer.dir/src/main.o.d"
   "File_Explorer"
   "File_Explorer.pdb"
 )

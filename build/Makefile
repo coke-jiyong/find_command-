@@ -57,10 +57,10 @@ RM = /usr/local/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ubuntu/mytmp/find/find_command-
+CMAKE_SOURCE_DIR = /home/ubuntu/mytmp/find-command
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ubuntu/mytmp/find/find_command-/build
+CMAKE_BINARY_DIR = /home/ubuntu/mytmp/find-command/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -85,11 +85,56 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 .PHONY : rebuild_cache/fast
 
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Available install components are: \"Unspecified\""
+.PHONY : list_install_components
+
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+.PHONY : list_install_components/fast
+
+# Special rule for the target install
+install: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Install the project..."
+	/usr/local/bin/cmake -P cmake_install.cmake
+.PHONY : install
+
+# Special rule for the target install
+install/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Install the project..."
+	/usr/local/bin/cmake -P cmake_install.cmake
+.PHONY : install/fast
+
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing only the local directory..."
+	/usr/local/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
+
+# Special rule for the target install/local
+install/local/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing only the local directory..."
+	/usr/local/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local/fast
+
+# Special rule for the target install/strip
+install/strip: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing the project stripped..."
+	/usr/local/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip
+
+# Special rule for the target install/strip
+install/strip/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing the project stripped..."
+	/usr/local/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip/fast
+
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/mytmp/find/find_command-/build/CMakeFiles /home/ubuntu/mytmp/find/find_command-/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/mytmp/find-command/build/CMakeFiles /home/ubuntu/mytmp/find-command/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/mytmp/find/find_command-/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/mytmp/find-command/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -117,65 +162,62 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named File_Explorer
+# Target rules for targets named fsearch
 
 # Build rule for target.
-File_Explorer: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 File_Explorer
-.PHONY : File_Explorer
+fsearch: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 fsearch
+.PHONY : fsearch
 
 # fast build rule for target.
-File_Explorer/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/File_Explorer.dir/build.make CMakeFiles/File_Explorer.dir/build
-.PHONY : File_Explorer/fast
+fsearch/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/fsearch.dir/build.make CMakeFiles/fsearch.dir/build
+.PHONY : fsearch/fast
 
-src/find.o: src/find.c.o
+# target to build an object file
+src/find.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/fsearch.dir/build.make CMakeFiles/fsearch.dir/src/find.o
 .PHONY : src/find.o
 
-# target to build an object file
-src/find.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/File_Explorer.dir/build.make CMakeFiles/File_Explorer.dir/src/find.c.o
-.PHONY : src/find.c.o
-
-src/find.i: src/find.c.i
+# target to preprocess a source file
+src/find.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/fsearch.dir/build.make CMakeFiles/fsearch.dir/src/find.i
 .PHONY : src/find.i
 
-# target to preprocess a source file
-src/find.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/File_Explorer.dir/build.make CMakeFiles/File_Explorer.dir/src/find.c.i
-.PHONY : src/find.c.i
-
-src/find.s: src/find.c.s
+# target to generate assembly for a file
+src/find.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/fsearch.dir/build.make CMakeFiles/fsearch.dir/src/find.s
 .PHONY : src/find.s
 
-# target to generate assembly for a file
-src/find.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/File_Explorer.dir/build.make CMakeFiles/File_Explorer.dir/src/find.c.s
-.PHONY : src/find.c.s
-
-src/main.o: src/main.c.o
+# target to build an object file
+src/main.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/fsearch.dir/build.make CMakeFiles/fsearch.dir/src/main.o
 .PHONY : src/main.o
 
-# target to build an object file
-src/main.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/File_Explorer.dir/build.make CMakeFiles/File_Explorer.dir/src/main.c.o
-.PHONY : src/main.c.o
-
-src/main.i: src/main.c.i
+# target to preprocess a source file
+src/main.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/fsearch.dir/build.make CMakeFiles/fsearch.dir/src/main.i
 .PHONY : src/main.i
 
-# target to preprocess a source file
-src/main.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/File_Explorer.dir/build.make CMakeFiles/File_Explorer.dir/src/main.c.i
-.PHONY : src/main.c.i
-
-src/main.s: src/main.c.s
+# target to generate assembly for a file
+src/main.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/fsearch.dir/build.make CMakeFiles/fsearch.dir/src/main.s
 .PHONY : src/main.s
 
+# target to build an object file
+src/thpool.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/fsearch.dir/build.make CMakeFiles/fsearch.dir/src/thpool.o
+.PHONY : src/thpool.o
+
+# target to preprocess a source file
+src/thpool.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/fsearch.dir/build.make CMakeFiles/fsearch.dir/src/thpool.i
+.PHONY : src/thpool.i
+
 # target to generate assembly for a file
-src/main.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/File_Explorer.dir/build.make CMakeFiles/File_Explorer.dir/src/main.c.s
-.PHONY : src/main.c.s
+src/thpool.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/fsearch.dir/build.make CMakeFiles/fsearch.dir/src/thpool.s
+.PHONY : src/thpool.s
 
 # Help Target
 help:
@@ -184,14 +226,21 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
+	@echo "... install"
+	@echo "... install/local"
+	@echo "... install/strip"
+	@echo "... list_install_components"
 	@echo "... rebuild_cache"
-	@echo "... File_Explorer"
+	@echo "... fsearch"
 	@echo "... src/find.o"
 	@echo "... src/find.i"
 	@echo "... src/find.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... src/thpool.o"
+	@echo "... src/thpool.i"
+	@echo "... src/thpool.s"
 .PHONY : help
 
 
